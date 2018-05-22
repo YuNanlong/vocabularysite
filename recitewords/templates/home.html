@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+    <!-- REVOLUTION SLIDER -->
+    <div class="fullwidthbanner-container">
+        <div class="fullwidthbanner">
+            <ul>
+            <!-- Slide 1 -->
+                <li data-transition="slideright">
+                    <img src="/static/img/slider/slider1.jpg" alt="" />
+                    
+                    <!-- Caption -->
+                    <div class="tp-caption lfr" data-x="left" data-y="195" data-speed="2400" data-start="800" data-easing="easeOutExpo">
+                        <img src="/static/img/slider/robot1.png" alt="" />
+                    </div>
+                        
+                    <!-- Caption -->
+                    <div class="tp-caption lfb" data-x="870" data-y="140" data-speed="1400" data-start="1800" data-easing="easeOutExpo">
+                        <img src="/static/img/slider/rocket.png" alt="" />
+                    </div>
+                    
+                    <!-- Caption -->
+                    <div class="tp-caption lfb" data-x="825" data-y="330" data-speed="1500" data-start="1900" data-easing="easeOutExpo">
+                        <img src="/static/img/slider/flames.png" alt="" />
+                    </div>
+                    
+                    <!-- Caption -->	
+                    <div class="caption sft stl" data-x="center" data-y="105" data-speed="1000" data-start="700" data-easing="easeOutExpo">
+                        <h3 class="rev-title bold">今日学习计划</h3>
+                    </div>
+                    
+                    <!-- Caption -->
+                    <div class="caption lfl stl rev-title-sub" data-x="center" data-y="240" data-speed="800" data-start="1100" data-easing="easeOutExpo">
+                        总数 - {{ request.user.daily_task_amount }} - 尚未完成 - {{ request.user.remained_daily_task_amount }}
+                    </div>
+                    
+                    <!-- Caption -->
+                    <div class="caption sfb" data-x="center" data-y="320" data-speed="1100" data-start="1500" data-easing="easeOutExpo">
+                        <a href="{% url "recite_word" %}" class="btn btn-primary btn-custom">开始学习</a>                 
+                    </div>
+                </li>
+            <!-- Slide 2 -->
+				<li data-transition="slideleft">
+                        <img src="/static/img/slider/slider4.jpg" alt="" />
+                        
+                        <!-- Caption -->
+                        <div class="tp-caption lfr" data-x="left" data-y="195" data-speed="2400" data-start="800" data-easing="easeOutExpo">
+                            <img src="/static/img/slider/robot1.png" alt="" />
+                        </div>
+                        
+                        <!-- Caption -->
+                        <div class="tp-caption lfb" data-x="870" data-y="140" data-speed="1400" data-start="1800" data-easing="easeOutExpo">
+                            <img src="/static/img/slider/rocket.png" alt="" />
+                        </div>
+                        
+                        <!-- Caption -->
+                        <div class="tp-caption lfb" data-x="825" data-y="330" data-speed="1500" data-start="1900" data-easing="easeOutExpo">
+                            <img src="/static/img/slider/flames.png" alt="" />
+                        </div>
+                        
+                        <!-- Caption -->	
+                        <div class="caption sft stl" data-x="center" data-y="105" data-speed="1000" data-start="700" data-easing="easeOutExpo">
+                            <h3 class="rev-title bold">当前正在学习</h3>
+                        </div>
+                        
+                        <!-- Caption -->
+                        <div class="caption lfl stl rev-title-sub" data-x="center" data-y="240" data-speed="800" data-start="1100" data-easing="easeOutExpo">
+                            {{ request.user.current_wordbook.name }}
+                        </div>
+                        
+                        <!-- Caption -->
+                        <div class="caption sfb" data-x="center" data-y="320" data-speed="1100" data-start="1500" data-easing="easeOutExpo">
+                                <a href="{% url "recite_word" %}" class="btn btn-inverse btn-custom mobile">开始学习</a>   &nbsp;&nbsp;
+                                <a href="{% url "learn_set" %}" class="btn btn-inverse btn-custom mobile">切换单词书</a>                 
+                        </div>
+                    </li>
+            </ul>
+            <div class="tp-bannertimer tp-bottom"></div>
+        </div>
+    </div>
+    <!-- // END REVOLUTION SLIDER -->
+{% endblock content %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+        <p>
+            {{ word.word.word.spelling }}
+        </p>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" hidden="hidden" name="task-id" value="{{ word.task_id }}">
+            <button type="submit" name="know">认识</button>
+            <button type="submit" name="unknow">不认识</button>
+        </form>
+{% endblock content %}

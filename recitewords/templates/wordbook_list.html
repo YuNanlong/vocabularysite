@@ -1,0 +1,47 @@
+{% extends "base.html" %} {% block content %}
+<!--page-->
+<!--banner-->
+<div id="banner">
+    <div class="container intro_wrapper">
+        <div class="inner_content">
+            <h1>Work</h1>
+            <h1 class="title">3 Column Portfolio</h1>
+
+            <h1 class="intro">
+                Web design is the creation of
+                <span class="hue">digital environments</span>, that
+                <span>facilitate</span> and encourage human activity;
+                <span>reflect </span> or adapt to individual voices and content. - Jeffrey Zeldman</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container wrapper">
+    <div class="inner_content">
+        <div class="row">
+            <!-- portfolio_block -->
+            {% for wordbook in wordbook_list %}
+            <div class="projects">
+                <div class="span4 element category01" data-category="category01">
+                    <div class="hover_img">
+                        <a href="/static/img/portfolio/1.jpg" data-rel="prettyPhoto[portfolio1]">
+                            <img src="/static/img/portfolio/1.jpg" alt="" />
+                        </a>
+                    </div>
+                    <div class="item_description">
+                        <a href="{% url "wordbook_detail" %}?wordbook-id={{ wordbook.id }}">
+                            <span>{{ wordbook.name }}</span>
+                        </a>
+                        <br/> {{ wordbook.description }}
+                    </div>
+                </div>
+
+                
+            </div>
+            {% endfor %}
+            <!-- //portfolio-->
+        </div>
+    </div>
+</div>
+<!--//page-->
+{% endblock content %}
