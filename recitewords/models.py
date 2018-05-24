@@ -61,7 +61,7 @@ class DailyTask(models.Model):
     def get_next_word(self):
         task_id = self.task_id
         while True:
-            if task_id == self.user.daily_task_amount:
+            if task_id == self.user.daily_task_words.count():
                 task_id = 1
             else:
                 task_id += 1
@@ -86,15 +86,19 @@ class DailyTask(models.Model):
                     i.delete()
                 else:
                     if task_id <= user.daily_task_amount:
-                        daily_task = DailyTask.create(user, i.word, datetime.date.today(), False, task_id)
-                        daily_task.save()
+                        i.task_id = task_id
+                        i.update_date = datetime.date.today()
+                        i.save()
                         task_id += 1
                     else:
-                        break
+                        i.delete() # TODO 测试每日单词量减少至少于之前未完成的总量的情况
             for i in user.need_to_learn():
                 if task_id <= user.daily_task_amount:
-                    daily_task = DailyTask.create(user, i, datetime.date.today(), False, task_id)
-                    daily_task.save()
-                    task_id += 1
+                    try:
+                        DailyTask.objects.get(user=user, word=i)
+                    except:
+                        daily_task = DailyTask.create(user, i, datetime.date.today(), False, task_id)
+                        daily_task.save()
+                        task_id += 1
                 else:
                     break

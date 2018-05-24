@@ -1,150 +1,41 @@
 <!DOCTYPE html>
-<html lang="zh">
-
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>flati | responsive html5 template | themeforest | josweb</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link href="/static/css/bootstrap.css" rel="stylesheet">
-    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/static/css/theme.css" rel="stylesheet">
-    <link href="/static/css/prettyPhoto.css" rel="stylesheet" type="text/css" />
-    <link href="/static/css/zocial.css" rel="stylesheet" type="text/css" />
-    <link href="/static/css/settings.css" rel="stylesheet" type="text/css" />
+{% load staticfiles %}
+<title>背单词</title>
+<!-- for-mobile-apps -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Residence Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+		function hideURLbar(){ window.scrollTo(0,1); } </script>
+
+<!-- //for-mobile-apps -->
+<link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" media="all" />
+<!-- js -->
+<script src="/static/js/jquery-1.11.1.min.js"></script>
+<!-- //js -->
+<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
+<script>
+	
+</script>
 </head>
-
+	
 <body>
-    <!--header-->
-    <div class="header">
-        <div class="container">
-            <!--logo-->
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <i class="fa fa-bars"></i>
-            </button>
-            <div class="logo">
-                <a href="{% url "home" %}">
-                    <img src="/static/img/logo.png" alt="" class="animated bounceInDown" />
-                </a>
-            </div>
-            <!--menu-->
-            <nav id="main_menu">
-                <div class="nav-collapse collapse">
-                    <ul class="nav nav-pills">
-                        <li class="dropdown">
-                            <a href="{% url "home" %}">首页</a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="{% url "recite_word" %}">背单词</a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="{% url "wordbook_list" %}">单词书</a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="{% url "search_word" %}">搜索</a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="javascript:{}">设置</a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{% url "reset_password" %}">修改密码</a>
-                                </li>
-                                <li>
-                                    <a href="{% url "learn_set" %}">学习设置</a>
-                                </li>
-                            </ul>
-                        </li>
-                        {% if request.user.is_authenticated %}
-                        <li class="dropdown">
-                            <a href="{% url "logout" %}">登出</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </div>
-    {% block content %} {% endblock content %}
-    <!--//header-->
-    <div class="pad25 hidden-desktop"></div>
-    <!-- footer 2 -->
-    <div id="footer2">
-        <div class="container">
-            <div class="row">
-                <div class="span12">
-                    <div class="copyright">
-                        背单词 &copy;
-                        <script type="text/javascript">
-                            //<![CDATA[
-                            var d = new Date()
-                            document.write(d.getFullYear())
-								//]]>
-                        </script> - All Rights Reserved
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- up to top -->
-    <a href="#">
-        <i class="go-top hidden-phone hidden-tablet fa fa-angle-double-up"></i>
-    </a>
-    <!--//end-->
-    <!-- SCRIPTS -->
-
-    <script src="/static/js/jquery.js"></script>
-    <script src="/static/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.themepunch.revolution.min.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.themepunch.plugins.min.js"></script>
-    <!-- slider settings -->
-    <script>
-        //<![CDATA[
-        $(document).ready(function () {
-            if ($.fn.cssOriginal != undefined)
-                $.fn.css = $.fn.cssOriginal;
-            $('.fullwidthbanner').revolution(
-                {
-                    delay: 5000,
-                    startwidth: 1170,
-                    startheight: 550,
-                    onHoverStop: "on",
-                    navigationType: "none",
-                    soloArrowLeftHOffset: 0,
-                    soloArrowLeftVOffset: 0,
-                    soloArrowRightHOffset: 0,
-                    soloArrowRightVOffset: 0,
-                    touchenabled: "on",
-                    fullWidth: "on",
-                    shadow: 0
-                });
-        });
-//]]>
-    </script>
-    <script src="/static/js/jquery.touchSwipe.min.js"></script>
-    <script src="/static/js/jquery.mousewheel.min.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.prettyPhoto.js"></script>
-    <script type="text/javascript" src="/static/js/scripts.js"></script>
-    <!-- carousel -->
-    <script type="text/javascript" src="/static/js/jquery.carouFredSel-6.2.1-packed.js"></script>
-    <script type="text/javascript">
-        //<![CDATA[
-        jQuery(document).ready(function ($) {
-            $("#slider_home").carouFredSel({
-                width: "100%", height: "auto",
-                responsive: true, circular: true, infinite: false, auto: false,
-                items: {
-                    width: 231, visible: { min: 1, max: 3 }
-                },
-                swipe: { onTouch: true, onMouse: true },
-                scroll: { items: 3, },
-                prev: { button: "#sl-prev", key: "left" },
-                next: { button: "#sl-next", key: "right" }
-            });
-        });
-		//]]>
-    </script>
+{% block content %} {% endblock content %}
+<!--footer-->
+	
+	<div class="footer-bottom">
+		<div class="container">		
+			<p>Copyright &copy; 2018 Residence. All Rights Reserved | Powered by <a href="http://www.smallseashell.com/">背单词</a></p>			
+		</div>
+	</div>
+<!--//footer-->	
+<!-- for bootstrap working -->
+		<script src="/static/js/bootstrap.js"> </script>
+<!-- //for bootstrap working -->
 </body>
-
 </html>

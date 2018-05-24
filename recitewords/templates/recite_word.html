@@ -1,12 +1,70 @@
-{% extends "base.html" %}
-{% block content %}
-        <p>
-            {{ word.word.word.spelling }}
-        </p>
-        <form method="POST">
-            {% csrf_token %}
-            <input type="text" hidden="hidden" name="task-id" value="{{ word.task_id }}">
-            <button type="submit" name="know">认识</button>
-            <button type="submit" name="unknow">不认识</button>
-        </form>
+{% extends "base.html" %} {% block content %}
+<div class="banner2">
+    <div class="container">
+        <div class="header-nav">
+            <nav class="navbar navbar-default">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="logo">
+                        <a class="navbar-brand" href="{% url 'home' %}">背单词
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{% url 'home' %}">首页</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'recite_word' %}">背单词</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'wordbook_list' %}">单词书</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'setting' %}">设置</a>
+                        </li>
+                        <li>
+                            <a href="contact.html">考试</a>
+                            <!--TODO-->
+                        </li>
+                    </ul>
+                    <div class="search">
+                        <form method="POST" action='{% url 'search_word' %}'>
+                            {% csrf_token %}
+                            <i class="glyphicon glyphicon-search" aria-hidden="true"></i>
+                            <input type="text" name="searching-word" value="Search Here..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search Here...';}"
+                                required="">
+                        </form>
+                    </div>
+                </div>
+                <!-- /.navbar-collapse -->
+            </nav>
+        </div>
+        <div class="banner-info">
+            <h1 class="word-spelling">{{ word.word.word.spelling }}</h1>
+            <p></p>
+            <div class="button-sec">
+                <a class="btn know-btn" onclick="document.getElementById('recite-form-know').submit();">认识</a>
+                <a class="btn unknow-btn" onclick="document.getElementById('recite-form-unknow').submit();">不认识</a>
+            </div>
+            <form method="POST" id="recite-form-know">{% csrf_token %}
+                <input type="text" hidden="hidden" name="task-id" value="{{ word.task_id }}">
+                <input type="text" hidden="hidden" name="know">
+            </form>
+            <form method="POST" id="recite-form-unknow">{% csrf_token %}
+                <input type="text" hidden="hidden" name="task-id" value="{{ word.task_id }}">
+                <input type="text" hidden="hidden" name="unknow">
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}

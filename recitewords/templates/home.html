@@ -1,81 +1,62 @@
-{% extends "base.html" %}
-{% block content %}
-    <!-- REVOLUTION SLIDER -->
-    <div class="fullwidthbanner-container">
-        <div class="fullwidthbanner">
-            <ul>
-            <!-- Slide 1 -->
-                <li data-transition="slideright">
-                    <img src="/static/img/slider/slider1.jpg" alt="" />
-                    
-                    <!-- Caption -->
-                    <div class="tp-caption lfr" data-x="left" data-y="195" data-speed="2400" data-start="800" data-easing="easeOutExpo">
-                        <img src="/static/img/slider/robot1.png" alt="" />
+{% extends "base.html" %} {% block content %}
+<!-- banner -->
+<div class="banner">
+    <div class="container">
+        <div class="header-nav">
+            <nav class="navbar navbar-default">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="logo">
+                        <a class="navbar-brand" href="{% url 'home' %}">背单词
+                        </a>
                     </div>
-                        
-                    <!-- Caption -->
-                    <div class="tp-caption lfb" data-x="870" data-y="140" data-speed="1400" data-start="1800" data-easing="easeOutExpo">
-                        <img src="/static/img/slider/rocket.png" alt="" />
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{% url 'home' %}">首页</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'recite_word' %}">背单词</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'wordbook_list' %}">单词书</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'setting' %}">设置</a>
+                        </li>
+                        <li>
+                            <a href="contact.html">考试</a><!--TODO-->
+                        </li>
+                    </ul>
+                    <div class="search">
+                        <form method="POST" action='{% url 'search_word' %}'>
+                            {% csrf_token %}
+                            <i class="glyphicon glyphicon-search" aria-hidden="true"></i>
+                            <input type="text" name="searching-word" value="Search Here..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search Here...';}"
+                                required="">
+                        </form>
                     </div>
-                    
-                    <!-- Caption -->
-                    <div class="tp-caption lfb" data-x="825" data-y="330" data-speed="1500" data-start="1900" data-easing="easeOutExpo">
-                        <img src="/static/img/slider/flames.png" alt="" />
-                    </div>
-                    
-                    <!-- Caption -->	
-                    <div class="caption sft stl" data-x="center" data-y="105" data-speed="1000" data-start="700" data-easing="easeOutExpo">
-                        <h3 class="rev-title bold">今日学习计划</h3>
-                    </div>
-                    
-                    <!-- Caption -->
-                    <div class="caption lfl stl rev-title-sub" data-x="center" data-y="240" data-speed="800" data-start="1100" data-easing="easeOutExpo">
-                        总数 - {{ request.user.daily_task_amount }} - 尚未完成 - {{ request.user.remained_daily_task_amount }}
-                    </div>
-                    
-                    <!-- Caption -->
-                    <div class="caption sfb" data-x="center" data-y="320" data-speed="1100" data-start="1500" data-easing="easeOutExpo">
-                        <a href="{% url "recite_word" %}" class="btn btn-primary btn-custom">开始学习</a>                 
-                    </div>
-                </li>
-            <!-- Slide 2 -->
-				<li data-transition="slideleft">
-                        <img src="/static/img/slider/slider4.jpg" alt="" />
-                        
-                        <!-- Caption -->
-                        <div class="tp-caption lfr" data-x="left" data-y="195" data-speed="2400" data-start="800" data-easing="easeOutExpo">
-                            <img src="/static/img/slider/robot1.png" alt="" />
-                        </div>
-                        
-                        <!-- Caption -->
-                        <div class="tp-caption lfb" data-x="870" data-y="140" data-speed="1400" data-start="1800" data-easing="easeOutExpo">
-                            <img src="/static/img/slider/rocket.png" alt="" />
-                        </div>
-                        
-                        <!-- Caption -->
-                        <div class="tp-caption lfb" data-x="825" data-y="330" data-speed="1500" data-start="1900" data-easing="easeOutExpo">
-                            <img src="/static/img/slider/flames.png" alt="" />
-                        </div>
-                        
-                        <!-- Caption -->	
-                        <div class="caption sft stl" data-x="center" data-y="105" data-speed="1000" data-start="700" data-easing="easeOutExpo">
-                            <h3 class="rev-title bold">当前正在学习</h3>
-                        </div>
-                        
-                        <!-- Caption -->
-                        <div class="caption lfl stl rev-title-sub" data-x="center" data-y="240" data-speed="800" data-start="1100" data-easing="easeOutExpo">
-                            {{ request.user.current_wordbook.name }}
-                        </div>
-                        
-                        <!-- Caption -->
-                        <div class="caption sfb" data-x="center" data-y="320" data-speed="1100" data-start="1500" data-easing="easeOutExpo">
-                                <a href="{% url "recite_word" %}" class="btn btn-inverse btn-custom mobile">开始学习</a>   &nbsp;&nbsp;
-                                <a href="{% url "learn_set" %}" class="btn btn-inverse btn-custom mobile">切换单词书</a>                 
-                        </div>
-                    </li>
-            </ul>
-            <div class="tp-bannertimer tp-bottom"></div>
+                </div>
+                <!-- /.navbar-collapse -->
+            </nav>
+        </div>
+        <div class="banner-info">
+            <h1>今日任务 - {{ request.user.daily_task_amount }} - 尚未完成 - {{ request.user.remained_daily_task_amount }}</h1>
+            <p></p>
+            <!--<div class="more m1">-->
+                <a class="btn start-learn-btn" href="{% url "recite_word" %}">开始学习</a>
+            <!--</div>-->
         </div>
     </div>
-    <!-- // END REVOLUTION SLIDER -->
+</div>
+<!-- //banner -->
 {% endblock content %}

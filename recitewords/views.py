@@ -19,7 +19,6 @@ def show_wordbook_detail(request):
     if request.method == 'POST':
         wordbook = get_object_or_404(WordBook, pk=request.POST['wordbook-id'])
         request.user.set_wordbook(wordbook)
-        request.user.save()
         return redirect('home')
     else:
         wordbook = get_object_or_404(WordBook, pk=request.GET['wordbook-id'])
@@ -39,6 +38,7 @@ def search_word(request):
 @login_required
 def recite_word(request):
     if request.method == 'POST':
+        print(request.POST) #DEBUG
         if 'add_to_favor' in request.POST:
             return redirect('home')
         elif 'next-word' in request.POST:
@@ -80,4 +80,5 @@ def recite_word(request):
             else:
                 return render(request, 'recite_word.html', {'word': word})
         except:
-            return HttpResponse("<script>alert('尚未选择单词书!'); window.location.href='{% url 'learn_set' %}';</script>")
+            return HttpResponse("<script>alert('尚未选择单词书!'); window.location.href='/accounts/setting';</script>")
+
