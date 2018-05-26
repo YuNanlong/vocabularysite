@@ -1,70 +1,150 @@
 {% extends "base.html" %} {% block content %}
-<div class="banner2">
+<section id="skills">
     <div class="container">
-        <div class="header-nav">
-            <nav class="navbar navbar-default">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <div class="logo">
-                        <a class="navbar-brand" href="{% url 'home' %}">背单词
-                        </a>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="title-content">
+                    <h2 class="section-title" id="word-spelling">{{ word.word.word.spelling }}</h2>
+                    <p class="subtitle" style="visibility: hidden;" id="word-meaning">{{ word.word.word.meaning }}</p>
+                    <p></p>
+                    <div id="btn-list">
+                        <a class="btn btn-default green-white" id="know-btn">认识</a>
+                        <a class="btn btn-default red-white" id="unknow-btn">不认识</a>
                     </div>
+                    <form method="POST" id="recite-form">{% csrf_token %}
+                        <input type="text" hidden="hidden" name="task-id" value="{{ word.task_id }}">
+                    </form>
                 </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="{% url 'home' %}">首页</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'recite_word' %}">背单词</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'wordbook_list' %}">单词书</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'setting' %}">设置</a>
-                        </li>
-                        <li>
-                            <a href="contact.html">考试</a>
-                            <!--TODO-->
-                        </li>
-                    </ul>
-                    <div class="search">
-                        <form method="POST" action='{% url 'search_word' %}'>
-                            {% csrf_token %}
-                            <i class="glyphicon glyphicon-search" aria-hidden="true"></i>
-                            <input type="text" name="searching-word" value="Search Here..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search Here...';}"
-                                required="">
-                        </form>
-                    </div>
-                </div>
-                <!-- /.navbar-collapse -->
-            </nav>
-        </div>
-        <div class="banner-info">
-            <h1 class="word-spelling">{{ word.word.word.spelling }}</h1>
-            <p></p>
-            <div class="button-sec">
-                <a class="btn know-btn" onclick="document.getElementById('recite-form-know').submit();">认识</a>
-                <a class="btn unknow-btn" onclick="document.getElementById('recite-form-unknow').submit();">不认识</a>
+                <!-- /.title-content -->
             </div>
-            <form method="POST" id="recite-form-know">{% csrf_token %}
-                <input type="text" hidden="hidden" name="task-id" value="{{ word.task_id }}">
-                <input type="text" hidden="hidden" name="know">
-            </form>
-            <form method="POST" id="recite-form-unknow">{% csrf_token %}
-                <input type="text" hidden="hidden" name="task-id" value="{{ word.task_id }}">
-                <input type="text" hidden="hidden" name="unknow">
-            </form>
         </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="skills-container">
+                    <div class="skill">
+                        <p class="name">进度</p>
+                        <br>
+                        <span class="percent" style="left: {{ finished_proportion }};">{{ finished_proportion }}</span>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ finished_proportion }};">
+                                <span class="sr-only">{{ finished_proportion }}</span>
+                            </div>
+                            <div class="overlay" style="width: {{ remained_proportion }}"></div>
+                        </div>
+                        <!-- /.progress -->
+                    </div>
+                    <!-- /.skill -->
+                </div>
+                <!-- /.skills-container -->
+            </div>
+        </div>
+        <!-- /.row -->
     </div>
-</div>
-{% endblock content %}
+    <!-- /.container -->
+</section>
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function toPercent(point) {
+        var str = Number(point * 100).toFixed(0);
+        str += "%";
+        return str;
+    }
+
+    $(document).on("click", "#know-btn", function () {
+        var csrftoken = getCookie('csrftoken');
+        var task_id = $("form#recite-form [name='task-id']").val();
+        console.log(task_id); //DEBUG
+        $.ajax({
+            url: window.location.href,
+            type: "POST",
+            data: {
+                "csrfmiddlewaretoken": csrftoken,
+                "task-id": task_id,
+                "know": "know",
+            },
+
+            success: function (json) {
+                var word_spelling = $("#word-spelling");
+                var task_id = $("input[name='task-id']");
+                var word_meaning = $("#word-meaning");
+
+                console.log(json); //DEBUG
+                remained_persent = toPercent(json['proportion']);
+                finished_persent = toPercent(1 - json['proportion']);
+                $(".percent").css("left", finished_persent);
+                $(".percent").text(finished_persent);
+                $(".progress-bar").css("width", finished_persent);
+                $(".overlay").css("width", remained_persent);
+                if (json['word_spelling'] == null) {
+                    alert('您已经完成今日学习任务!');
+                    window.location.href = '/recite/home';
+                }
+                else {
+                    word_spelling.text(json['word_spelling']);
+                    task_id.val(json['task_id']);
+                    word_meaning.text(json['word_meaning']);
+                }
+            }
+        });
+    });
+
+    $(document).on("click", "#unknow-btn", function () {
+        $("#word-meaning").attr("style", "visibility: visiable;");
+        console.log($("#word-meaning").css("visibility")); // DEBUG
+        $("#btn-list").empty();
+        $("<a class='btn btn-default red-white' id='next-word'>下一个</a>").appendTo($("#btn-list"))
+    });
+
+    $(document).on("click", "#next-word", function () {
+        var csrftoken = getCookie('csrftoken');
+        var task_id = $("form#recite-form [name='task-id']").val();
+        console.log(task_id); // DEBUG
+        $.ajax({
+            url: window.location.href,
+            type: "POST",
+            data: {
+                "csrfmiddlewaretoken": csrftoken,
+                "task-id": task_id,
+                "next-word": "next-word",
+            },
+
+            success: function (json) {
+                var word_spelling = $("#word-spelling");
+                var task_id = $("input[name='task-id']");
+                var word_meaning = $("#word-meaning");
+
+                console.log(json); //DEBUG
+                if (json['word_spelling'] == null) {
+                    alert('您已经完成今日学习任务!');
+                    window.location.href = '/recite/home';
+                }
+                else {
+                    $("#word-meaning").css("visibility", "hidden");
+                    $("#btn-list").empty();
+                    $('<a class="btn btn-default green-white" id="know-btn">认识</a>').appendTo($("#btn-list"))
+                    $('<a class="btn btn-default red-white" id="unknow-btn">不认识</a>').appendTo($("#btn-list"))
+                    word_spelling.text(json['word_spelling']);
+                    task_id.val(json['task_id']);
+                    console.log(json['word_meaning']); //DEBUG
+                    word_meaning.text(json['word_meaning']);
+                }
+
+            }
+        });
+    });
+</script> {% endblock content %}

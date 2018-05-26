@@ -1,41 +1,247 @@
 <!DOCTYPE html>
 <html>
-<head>
-{% load staticfiles %}
-<title>背单词</title>
-<!-- for-mobile-apps -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="Residence Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
-		function hideURLbar(){ window.scrollTo(0,1); } </script>
 
-<!-- //for-mobile-apps -->
-<link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
-<link href="/static/css/style.css" rel="stylesheet" type="text/css" media="all" />
-<!-- js -->
-<script src="/static/js/jquery-1.11.1.min.js"></script>
-<!-- //js -->
-<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
-<script>
-	
-</script>
+<head>
+    {% load staticfiles %}
+    <title>背单词</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Free singlepage web template created by GraphBerry">
+    <meta name="keywords" content="HTML5, Bootstrap 3, CSS3, javascript, PHP, Responsive, Mobile">
+    <meta name="author" content="GraphBerry.com" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/gonex-icons.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style2.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
-	
+
 <body>
-{% block content %} {% endblock content %}
-<!--footer-->
-	
-	<div class="footer-bottom">
-		<div class="container">		
-			<p>Copyright &copy; 2018 Residence. All Rights Reserved | Powered by <a href="http://www.smallseashell.com/">背单词</a></p>			
-		</div>
-	</div>
-<!--//footer-->	
-<!-- for bootstrap working -->
-		<script src="/static/js/bootstrap.js"> </script>
-<!-- //for bootstrap working -->
+
+    <header id="header">
+
+        <!-- Section title -->
+        <h1 class="sr-only">Gonex | Home page</h1>
+
+        <nav id="main-navigation" class="navbar navbar-default navbar-fixed-top">
+            <!-- Section title -->
+            <h1 class="sr-only">Main navigation</h1>
+
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="sr-only">Toggle navigation</span>
+                    </button>
+                    <a id="brand-mobile" class="navbar-brand navbar-brand-center smoothScroll dropdown-toggle" data-toggle="dropdown" href="">
+                        <!--TODO-->
+                        <img alt="Gonex" src="/static/img/svg/logo.svg">
+                    </a>
+                    <ul class="dropdown-menu" style="margin: 0 0 0 45px; min-width: 100px; width: 100px; text-align: center; font-family: 'Montserrat', sans-serif;">
+                        {% if request.user.is_authenticated %}
+                        <li>
+                            <a class="dropdown-item" id="modal-logout" href="#modal-container-logout" role="button" class="btn" data-toggle="modal">登出</a>
+                        </li>
+
+                        {% else %}
+
+                        <li>
+                            <a class="dropdown-item" id="modal-login" href="#modal-container-login" role="button" class="btn" data-toggle="modal">登录</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" id="modal-signup" href="#modal-container-signup" role="button" class="btn" data-toggle="modal">注册</a>
+                        </li>
+                        <!--<li class="divider"></li>-->
+                        {% endif %}
+
+                    </ul>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="main-navbar">
+
+                    <form method="POST" class="navbar-form navbar-right" role="search" action="{% url 'search_word' %}">
+                        {% csrf_token %}
+                        <button type="button" id="btn-togglesearch" class="btn-search">
+                            <span class="ico ico-search-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Toggle search</span>
+                        </button>
+
+                        <div id="search-input" class="search-input">
+                            <input name="searching-word" type="text" placeholder="Search">
+                        </div>
+
+                        <button type="submit" id="btn-submitsearch" class="btn-search">
+                            <span class="ico ico-search-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Submit search</span>
+                        </button>
+
+                    </form>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a class="smoothScroll" href="{% url 'home' %}">首页</a>
+                        </li>
+                        {% if request.user.is_authenticated %}
+                        <li>
+                            <a class="smoothScroll" href="{% url 'recite_word' %}">背单词</a>
+                        </li>
+                        <li>
+                            <a class="smoothScroll" href="{% url 'wordbook_list' %}">单词书</a>
+                        </li>
+                        <li>
+                            <a class="smoothScroll" href="{% url 'setting' %}">设置</a>
+                        </li>
+                        <li>
+                            <a class="smoothScroll" href="{% url 'exam_set' %}">测试</a>
+                            <!-- TODO -->
+                        </li>
+                        <li>
+                            <a class="smoothScroll" href="">我的收藏</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+
+                </div>
+                <!-- /.navbar-collapse -->
+
+            </div>
+            <!-- /.container -->
+
+        </nav>
+
+    </header>
+
+    <main>
+        {% block content %} {% endblock content %}
+    </main>
+
+    <footer id="footer">
+
+        <!-- Section title -->
+        <h1 class="sr-only">Footer</h1>
+
+        <p class="copyright"> ©
+            <span id="year">2018</span> - All Rights Reserved.
+            <a href="{% url 'home' %}" target="_blank" title="模板之家">背单词</a>
+        </p>
+
+    </footer>
+
+    {% if user.is_authenticated %}
+    <div class="modal fade" id="modal-container-logout" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    
+                </div>
+                <div class="modal-body" style="text-align: center;">
+                    您已退出登录
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-btn-logout-ok" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %} 
+    <div class="modal fade" id="modal-container-login" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        登录
+                    </h4>
+                </div>
+                <div class="modal-body">
+                        <form id="login_form" method="POST" action="{% url 'login' %}">
+                                <div class="modal-body form-group mb-0">
+                                  {% csrf_token %}
+                                  <label class="sr-only" for="id_username">用户名:</label> 
+                                  <div class="input-group">
+                                    <div class="input-group-addon">
+                                      <div class="input-group-text"><span class="oi oi-person"></span></div>
+                                    </div>
+                                    <input id="id_username" class="form-control" maxlength="254" placeholder="请输入用户名" name="username" type="text">
+                                  </div>
+                                  <div id="username_feedback" class="invalid-feedback d-block">
+                                    &nbsp;
+                                  </div>
+                                  
+                                  <label class="sr-only" for="id_password">密码:</label> 
+                                  <div class="input-group">
+                                    <div class="input-group-addon">
+                                      <div class="input-group-text"><span class="oi oi-key"></span></div>
+                                    </div>
+                                    <input id="id_password" class="form-control" name="password" placeholder="请输入密码" type="password">
+                                    
+                                  </div>
+                                  <div id="password_feedback" class="invalid-feedback d-block">
+                                    &nbsp;
+                                  </div>
+                                  <br>
+                                  
+                                  <a class="text-secondary" role="button" href="">忘记密码？</a>
+                              
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default green-white" data-dismiss="modal">登录</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-container-signup" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        注册
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    内容...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default green-white" data-dismiss="modal">注册</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="/static/js/libs/smooth-scroll.min.js"></script>
+    <script type="text/javascript" src="/static/js/libs/modernizr.mq.js"></script>
+    <script type="text/javascript" src="/static/js/libs/mixitup.min.js"></script>
+    <!-- Latest compiled and minified JavaScript Bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <!-- Custom JS -->
+    <script type="text/javascript" src="/static/js/video.js"></script>
+    <script type="text/javascript" src="/static/js/custom.js"></script>
+
+    <script>
+        $("#modal-btn-logout-ok").click(function(){
+            $('#modal-container-logout').modal("hide");
+            window.location="{% url 'home' %}";
+        })
+    </script>
 </body>
+
 </html>

@@ -1,76 +1,59 @@
 {% extends "base2.html" %} {% block content %}
-<!-- about -->
-<div class="about">
-    <div class="container">
-        <h3>单词书列表</h3>
-        {% for wordbook in wordbook_list %}
-        <div class="col-md-4">
-        <div class="about-grids">
-            <div class="col-md-12 about-grid">
-                <img src="/static/images/2.jpg" alt=" " class="img-responsive" /><!-- TODO: 修改图片的src -->
-            </div>
-        </div>
-        <div class="clearfix"> </div>
-        <div class="about-grids-bottom">
-            <div class="col-md-12 about-us">
-                <h4>{{ wordbook.name }}</h4>
-                <p>{{ wordbook.description }}</p>
-                <div class="contact-us1-bottom">
-                {% ifequal wordbook request.user.current_wordbook %}
-                <a href="{% url 'recite_word' %}">
-                <input type="submit" name="choose" value="进入学习"></a>
-                        
-                {% else %}
-                <form method="POST" action="{% url 'wordbook_detail' %}">
-                        {% csrf_token %}
-                        <input type="text" name="wordbook-id" value="{{ wordbook.id }}" hidden="hidden">
-                        <input type="submit" name="choose" value="选择">
+
+<!-- Page 2 Gallery One -->
+
+    <div class="cd-full-width">
+        <div class="container-fluid js-tm-page-content" data-page-no="2" data-page-type="gallery">
+            <div class="tm-img-gallery-container">
+                <div class="tm-img-gallery gallery-one">
+                    <!-- Gallery One pop up connected with JS code below -->
+                    <div class="tm-img-gallery-info-container">
+                        <h3 class="tm-text-title tm-gallery-title ">
+                            <span >单词书列表</span>
+                            </h3>
+                            <p class="tm-text">点按图片进入学习或切换单词书
+                            </p>
+                    </div>
+                    {% for wordbook in wordbook_list %}
+                    <div class="grid-item">
+                        <figure class="effect-ruby">
+                            <img src="/static/img/tm-img-01-tn.jpg" alt="Image" class="img-fluid tm-img">
+                            <figcaption>
                                 
-                </form>
-                {% endifequal %}
-            </div>
+                                    
+                                    {% ifequal wordbook request.user.current_wordbook %}
+                                    <h3 class="tm-figure-title">进入学习
+                                        </h3>
+                                        <p class="tm-figure-description"></p>
+                        <a href="{% url 'recite_word' %}">
+                        </a>
+
+                        {% else %}
+                        <h3 class="tm-figure-title">切换至该书
+                            </h3>
+                            <p class="tm-figure-description"></p>
+                        <a  onclick="document.getElementById('change-wordbook').submit();"></a>
+                        <form method="POST" action="{% url 'wordbook_detail' %}" id="change-wordbook">
+                            {% csrf_token %}
+                            <input type="text" name="wordbook-id" value="{{ wordbook.id }}" hidden="hidden">
+
+                        </form>
+                        {% endifequal %}
+                            </figcaption>
+                        </figure>
+                        <br>
+                        <h3 class="tm-text-title tm-gallery-title">
+                                <span>{{ wordbook.name }}</span>
+                                </h3>
+                        <p class="tm-text">{{ wordbook.description }}</p>
+                    </div>
+                    {% endfor %}
+                    
+                    
+                    
+                </div>
             </div>
         </div>
     </div>
-    {% if forloop.counter|divisibleby:"3" %}
-    <div class="clearfix"> </div>
-    {% endif %}
-    {% endfor %}
-</div>
-</div>
-            <!--<div class="col-md-4 about-grid">
-                <img src="/static/images/3.jpg" alt=" " class="img-responsive" />
-                <div class="img-bottom">
-                    <p>accusamus et iusto odio malesuada</p>
-                </div>
-            </div>
-            <div class="col-md-4 about-grid">
-                <img src="/static/images/9.jpg" alt=" " class="img-responsive" />
-                <div class="img-bottom">
-                    <p>accusamus et iusto odio malesuada</p>
-                </div>
-            </div>-->
-            
-        
-        <!--<div class="about-grids-bottom">
-            <div class="col-md-4 about-us">
-                <h4>About Us</h4>
-                <p>Donec rutrum congue leo eget malesuada.Curabitur non nulla sit amet nisl tempus convallis quis ac lactusnisl
-                    tempus convallis quis ac lactus.Sed porttitor lactus nibhSed porttitor lactus nibh.Proin eget tortor
-                    risus.Nulla porttitor accumsan tincidunt.</p>
-            </div>
-            <div class="col-md-4 about-us">
-                <h4>Who We Are</h4>
-                <p>Donec rutrum congue leo eget malesuada.Curabitur non nulla sit amet nisl tempus convallis quis ac lactus.Sed
-                    porttitor lactus nibh.</p>
-            </div>
-            <div class="col-md-4 about-us">
-                <h4>Why We Do This</h4>
-                <p>Donec rutrum congue leo eget malesuada.Curabitur non nulla sit amet nisl tempus convallis quis ac lactusnisl
-                    tempus convallis quis ac lactus.Sed porttitor lactus nibhSed porttitor lactus nibh.</p>
-            </div>
-            <div class="clearfix"> </div>
-        </div>
-    </div>-->
-<!-- about -->
+
 {% endblock content %}

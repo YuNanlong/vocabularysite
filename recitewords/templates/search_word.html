@@ -1,66 +1,38 @@
-{% extends "base.html" %}
-{% block content %}
-<!--banner-->
-    <div id="banner">
-        <div class="container intro_wrapper">
-            <div class="inner_content">
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="searching-word">
-                    <br>
-                    <button type="submit" name="search" class="btn btn-primary btn-custom">
-                        搜索
-                    </button>
-                </form>
-            </div>
-        </div>
-        </div>
-                
-        <div class="container wrapper">
-        <div class="inner_content">
-        <div class="pad30"></div>
-        <div class="pad30"></div>
-        <div class="pad30"></div>
-        <div class="pad30"></div>
-        <div class="pad30"></div>
-        <div class="pad30"></div>
-        <div class="pad30"></div>
-        <div class="pad30"></div>
-        
+{% extends "base.html" %} {% block content %}
+<section id="video">
+
+    <!-- Section title -->
+    <h1 class="sr-only">Video</h1>
+
+    <div class="container">
+
         <div class="row">
-                {% if is_search %}
-                {% if result %}
-                <div class="span3"></div>
-                <div class="span3">
-                <p>
-                    {{ result.spelling }}
-                </p>
+
+            <div class="col-md-10 col-md-offset-1">
+
+                <div class="title-content">
+                    {% if is_search %} {% if result %}
+                    <h2 class="section-title">
+                        {{ result.spelling }}
+                    </h2>
+
+                    <p class="subtitle">{{ result.meaning }}</p>
+
+                    <p></p>
+                    {% else %}
+                    <p class="subtitle">未查询到您的单词</p>
+                    {% endif %} {% endif %}
+
                 </div>
-                <div class="span6">
-                <p>
-                    {{ result.meaning }}
-                </p>
-                </div>
-                {% else %}
-                <div class="span12">
-                <p>
-                    未查询到您的单词
-                </p>
-                </div>
-                {% endif %}
-            {% endif %}
-                <div class="clear"></div>
-                <div class="pad25"></div>
-                
-        
-            
-        
-            
-        
-                </div>
+                <!-- /.title-content -->
+
             </div>
+
         </div>
-        <!--//page-->
-        
-        
+        <!-- /.row -->
+
+    </div>
+    <!-- /.contact -->
+</section>
+
 {% endblock content %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %} {% block content %}
+<section id="skills">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="title-content">
+                    <h2 class="section-title" id="word-spelling">{{ word.word.word.spelling }}</h2>
+                    <p class="subtitle" style="visibility: hidden;" id="word-meaning">///</p>
+                    <p></p>
+                    <div id="btn-list">
+                        <a class="btn btn-default green-white" id="know-btn">掌握了</a>
+                        <a class="btn btn-default red-white" id="unknow-btn">忘记了</a>
+                    </div>
+                    <form method="POST" id="recite-form">{% csrf_token %}
+                        <input type="text" hidden="hidden" name="task-id" value="">
+                    </form>
+                </div>
+                <!-- /.title-content -->
+            </div>
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="skills-container">
+                    <div class="skill">
+                        <p class="name">进度</p>
+                        <br>
+                        <span class="percent" style="left: 0%;">0%</span>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                <span class="sr-only">0%</span>
+                            </div>
+                            <div class="overlay" style="width: 100%"></div>
+                        </div>
+                        <!-- /.progress -->
+                    </div>
+                    <!-- /.skill -->
+                </div>
+                <!-- /.skills-container -->
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</section>
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function toPercent(point) {
+        var str = Number(point * 100).toFixed(0);
+        str += "%";
+        return str;
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            url: window.location.href,
+            type: "GET",
+            data: {
+                "get_exam_words": "get_exam_words",
+            },
+
+            success: function (json) {
+                window.word_list = json['word_list'];
+                window.id_list = json['id_list'];
+                console.log(window.word_list); // DEBUG
+                console.log(window.word_list[0]); // DEBUG
+                console.log(window.id_list); // DEBUG
+                window.i = 0;
+                window.correct_amount = 0;
+                if(window.word_list.length == 0){
+                    alert("您还未学习任何单词!无法进行测试");
+                    window.location.href = '/recite/home';
+                }
+                $("#word-spelling").text(word_list[window.i]);               
+            }
+        });
+    });
+
+    $(document).on("click", "#know-btn", function () {
+        window.i += 1;
+        window.correct_amount += 1;
+        remained_persent = toPercent(1 - i / window.word_list.length);
+        finished_persent = toPercent(i / window.word_list.length);
+        $(".percent").css("left", finished_persent);
+        $(".percent").text(finished_persent);
+        $(".progress-bar").css("width: ", finished_persent);
+        $(".overlay").css("width", remained_persent);
+        if (i == window.word_list.length) {
+            alert("您已完成考试！\n本次考试的正确率为" + window.correct_amount + "/" + window.word_list.length);
+            window.location.href = '/recite/home';
+        }
+        $("#word-spelling").text(window.word_list[i]);
+    });
+
+    $(document).on("click", "#unknow-btn", function () {
+        var csrftoken = getCookie('csrftoken');
+        var id = window.id_list[window.i];
+        console.log(id); // DEBUG
+        $.ajax({
+            url: window.location.href,
+            type: "POST",
+            data: {
+                "csrfmiddlewaretoken": csrftoken,
+                "id": id,
+            },
+        });
+        window.i += 1;
+        remained_persent = toPercent(1 - i / window.word_list.length);
+        finished_persent = toPercent(i / window.word_list.length);
+        $(".percent").css("left", finished_persent);
+        $(".percent").text(finished_persent);
+        $(".progress-bar").css("width", finished_persent);
+        $(".overlay").css("width", remained_persent);
+        if (window.i == word_list.length) {
+            alert("您已完成考试！\n本次考试的正确率为" + window.correct_amount + "/" + window.word_list.length);
+            window.location.href = '/recite/home';
+        }
+        $("#word-spelling").text(word_list[i]);
+    });
+</script> {% endblock content %}
