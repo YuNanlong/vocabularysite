@@ -7,6 +7,7 @@ from django.core import serializers
 import random
 
 def home(request):
+    wordbook_list = None
     if request.user.is_authenticated():
         DailyTask.init_daily_task(request.user)
         wordbook_list = WordBook.objects.all()
@@ -95,17 +96,6 @@ def recite_word(request):
                 return render(request, 'recite_word.html', {'word': word, 'finished_proportion': finished_proportion, 'remained_proportion': remained_proportion})
         except:
             return HttpResponse("<script>alert('尚未选择单词书!'); window.location.href='/accounts/setting';</script>")
-
-@login_required
-def exam_set(request):
-    print(request.POST) # DEBUG
-    print(request.GET) # DEBUG
-    if request.method == 'POST':
-        request.user.exam_amount = int(request.POST['exam-amount'])
-        request.user.save()
-        return redirect('exam')
-    else:
-        return render(request, 'exam_set.html')
 
 @login_required
 def exam(request):

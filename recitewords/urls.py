@@ -8,6 +8,5 @@ urlpatterns = [
     url(r'^wordbook_detail', views.show_wordbook_detail, name='wordbook_detail'),
     url(r'^search_word', views.search_word, name='search_word'),
     url(r'^recite_word', views.recite_word, name='recite_word'),
-    url(r'^exam_set', views.exam_set, name='exam_set'),
     url(r'^exam', views.exam, name='exam'),
 ]

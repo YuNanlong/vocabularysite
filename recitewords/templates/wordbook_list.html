@@ -1,59 +1,60 @@
-{% extends "base2.html" %} {% block content %}
-
-<!-- Page 2 Gallery One -->
-
-    <div class="cd-full-width">
-        <div class="container-fluid js-tm-page-content" data-page-no="2" data-page-type="gallery">
-            <div class="tm-img-gallery-container">
-                <div class="tm-img-gallery gallery-one">
-                    <!-- Gallery One pop up connected with JS code below -->
-                    <div class="tm-img-gallery-info-container">
-                        <h3 class="tm-text-title tm-gallery-title ">
-                            <span >单词书列表</span>
-                            </h3>
-                            <p class="tm-text">点按图片进入学习或切换单词书
-                            </p>
+{% extends "base.html" %} {% block content %}
+<div class="section first white">
+    <div class=" p-b-60">
+        <div class="section grey p-t-20  p-b-20 m-b-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>
+                            单词书</h2>
                     </div>
-                    {% for wordbook in wordbook_list %}
-                    <div class="grid-item">
-                        <figure class="effect-ruby">
-                            <img src="/static/img/tm-img-01-tn.jpg" alt="Image" class="img-fluid tm-img">
-                            <figcaption>
-                                
+                    <!--<div class="col-md-6 p-t-20 xs-no-padding xs-p-l-20">
+                                <div class="portfolio-filter">
+                                    <ul id="portfolio-nav">
+                                        <li class="current"><a href="#" data-filter="*">All</a></li>
+                                        <li><a data-filter=".web" href="#">Web design</a></li>
+                                        <li><a data-filter=".logo-design" href="#">Logo</a></li>
+                                        <li><a data-filter=".branding" href="#">Branding</a></li>
+                                        <li><a data-filter=".video" href="#">Video</a></li>
+                                        <li><a data-filter=".photo" href="#">Photography</a></li>
+                                    </ul>
                                     
-                                    {% ifequal wordbook request.user.current_wordbook %}
-                                    <h3 class="tm-figure-title">进入学习
-                                        </h3>
-                                        <p class="tm-figure-description"></p>
-                        <a href="{% url 'recite_word' %}">
-                        </a>
-
-                        {% else %}
-                        <h3 class="tm-figure-title">切换至该书
-                            </h3>
-                            <p class="tm-figure-description"></p>
-                        <a  onclick="document.getElementById('change-wordbook').submit();"></a>
-                        <form method="POST" action="{% url 'wordbook_detail' %}" id="change-wordbook">
-                            {% csrf_token %}
-                            <input type="text" name="wordbook-id" value="{{ wordbook.id }}" hidden="hidden">
-
-                        </form>
-                        {% endifequal %}
-                            </figcaption>
-                        </figure>
-                        <br>
-                        <h3 class="tm-text-title tm-gallery-title">
-                                <span>{{ wordbook.name }}</span>
-                                </h3>
-                        <p class="tm-text">{{ wordbook.description }}</p>
-                    </div>
-                    {% endfor %}
-                    
-                    
-                    
+                                </div>
+                            </div>-->
                 </div>
+            </div>
+            <div class="clearfix">
+            </div>
+        </div>
+        <div class="container">
+            <div class="portfolio-grid portfolioContainer ">
+                <ul id="thumbs" class="col3">
+                    {% for wordbook in wordbook_list %}
+                    <li class="item web">
+                        <div class="portfolio-image-wrapper">
+                            <img src="/static/assets/img/gallery/1.jpg" alt="" />
+                            <div class="item-info-overlay">
+                                <div>
+                                    <h3 class="text-white semi-bold p-t-60 project-title ">
+                                        {{ wordbook.description }}</h3>
+                                    <p class="project-description">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-info">
+                            <h4 class="text-dark no-margin p-t-10 title semi-bold">
+                                {{ wordbook.name }}</h4>
+                            <p></p>
+                        </div>
+                        <!--END ITEM-INFO-->
+                        <div class="clearfix">
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>
-
+</div>
 {% endblock content %}
