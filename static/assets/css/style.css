@@ -40,6 +40,7 @@
     color: #dc3545;
 }
 
+/* css绘制爱心 */
 .heart { 
     position: relative; 
     width: 12px; 
@@ -71,6 +72,66 @@
     top: -50%; 
 } 
 
+/* 收藏单词的显示列表 */
+.panel-group .panel {
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+	border: none;
+}
+.panel-default > .panel-heading {
+	padding: 0;
+	outline: none;
+	border: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-o-border-radius: 0;
+	border-radius: 0;
+	width: 100%;
+}
+.panel-default > .panel-heading + .panel-collapse > .panel-body {
+	border: 1px solid #f0f0f0;
+	border-top: none;
+	background-color: #fafafa
+}
+.panel-heading a {
+	font-weight: 400;
+	padding: 12px 35px 12px 15px;
+	display: inline-block;
+	width: 100%;
+	background-color: #fff;
+	color: #DB0A61;
+	position: relative;
+	text-decoration: none;
+	border: #ECECEC 1px solid;
+}
+.panel-heading a.collapsed {
+	color: #333333;
+	background-color: #FAFAFA;
+}
+.panel-heading a:after {
+	font-family: "FontAwesome";
+	content: "\f147";
+	position: absolute;
+	right: 15px;
+	font-size: 14px;
+	font-weight: 300;
+	top: 50%;
+	line-height: 1;
+	margin-top: -7px;
+}
+.panel-heading a.collapsed:after {
+	content: "\f196";
+}
+.panel-heading a:hover {
+	text-decoration: none;
+	background-color: #FFFFFF;
+	color: #DB0A61;
+}
+.panel-title a i {
+	padding-right: 10px;
+	font-size: 20px;
+}
 
 html{
 	font-size: 100%;

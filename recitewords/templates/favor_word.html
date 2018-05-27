@@ -1,0 +1,46 @@
+{% extends "base.html" %}{% block content %}
+<div class="container" id="favor-word-wrapper">
+    <div class="section grey text-center m-t-60 p-t-40 p-b-40" id="banner-footer">
+        <h2 class="normal m-b-10">
+            我的收藏列表</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                {% for favor_word in favor_word_list %}
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="heading{{ favor_word.id }}">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ favor_word.id }}" aria-expanded="false"
+                                aria-controls="collapse{{ favor_word.id }}">
+                                {{ favor_word.word.spelling }}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse{{ favor_word.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ favor_word.id }}">
+                        <div class="panel-body">
+                            {{ favor_word.word.meaning }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<script>
+    $(window).ready(function () {
+        var nav_height = $(".navbar").height();
+        var footer_height = $("#footer").height();
+        $("#favor-word-wrapper").css("min-height", window.innerHeight - nav_height - footer_height);
+    });
+
+    $(window).resize(function () {
+        var nav_height = $(".navbar").height();
+        var footer_height = $("#footer").height();
+        $("#favor-word-wrapper").css("min-height", window.innerHeight - nav_height - footer_height);
+    });
+</script> {% endblock content %}

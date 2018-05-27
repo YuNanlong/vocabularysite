@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^search_word', views.search_word, name='search_word'),
     url(r'^recite_word', views.recite_word, name='recite_word'),
     url(r'^exam', views.exam, name='exam'),
+    url(r'^favor', views.favor_word, name="favor_word"),
 ]

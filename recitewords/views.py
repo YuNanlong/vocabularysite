@@ -57,7 +57,12 @@ def recite_word(request):
             if next_word is None:
                 json_data = {'word_spelling': None, 'task_id': None, 'word_meaning': None}
             else:
-                json_data = {'word_spelling': next_word.word.word.spelling, 'task_id': next_word.task_id, 'word_meaning': next_word.word.word.meaning}
+                try:
+                    request.user.favor_words.get(pk=next_word.word.id)
+                    is_favored = True
+                except:
+                    is_favored = False
+                json_data = {'word_spelling': next_word.word.word.spelling, 'task_id': next_word.task_id, 'word_meaning': next_word.word.word.meaning, 'is_favored': is_favored}
             print(json_data) # DEBUG
             return JsonResponse(json_data)
         elif 'know' in request.POST:
@@ -75,7 +80,12 @@ def recite_word(request):
                 total = request.user.daily_task_words.count()
                 remained = request.user.remained_daily_task_amount()
                 proportion = remained / total
-                json_data = {'word_spelling': next_word.word.word.spelling, 'task_id': next_word.task_id, 'word_meaning': next_word.word.word.meaning, 'proportion': proportion}
+                try:
+                    request.user.favor_words.get(pk=next_word.word.id)
+                    is_favored = True
+                except:
+                    is_favored = False
+                json_data = {'word_spelling': next_word.word.word.spelling, 'task_id': next_word.task_id, 'word_meaning': next_word.word.word.meaning, 'proportion': proportion, 'is_favored': is_favored}
             return JsonResponse(json_data)
         else:   
             return redirect('home')
@@ -93,7 +103,12 @@ def recite_word(request):
                 remained = request.user.remained_daily_task_amount()
                 remained_proportion = '%.0f%%' % (remained / total * 100)
                 finished_proportion = '%.0f%%' % (100 - remained / total * 100)
-                return render(request, 'recite_word.html', {'word': word, 'finished_proportion': finished_proportion, 'remained_proportion': remained_proportion})
+                try:
+                    request.user.favor_words.get(pk=word.word.id)
+                    is_favored = True
+                except:
+                    is_favored = False
+                return render(request, 'recite_word.html', {'word': word, 'finished_proportion': finished_proportion, 'remained_proportion': remained_proportion, 'is_favored': is_favored})
         except:
             return HttpResponse("<script>alert('尚未选择单词书!'); window.location.href='/accounts/setting';</script>")
 
@@ -124,3 +139,18 @@ def exam(request):
             return JsonResponse(json_data)
         else:
             return render(request, 'exam.html')
+
+@login_required
+def favor_word(request):
+    if request.method == 'POST':
+        print(request.POST)
+        word = get_object_or_404(DailyTask, user=request.user, task_id=int(request.POST['task-id'])).word
+        try:
+            request.user.favor_words.get(pk=word.id)
+            request.user.favor_words.remove(word)
+        except:
+            request.user.favor_words.add(word)
+        return JsonResponse({})
+    else:
+        favor_word_list = request.user.favor_words.all()
+        return render(request, 'favor_word.html', {'favor_word_list': favor_word_list})

@@ -10,6 +10,7 @@ class User(AbstractUser):
     learned_words = models.ManyToManyField(WordSet, related_name='user_learned_words', through='recitewords.LearnedWord') # 已学单词
     daily_task_words = models.ManyToManyField(WordSet, related_name='user_daily_task_words', through='recitewords.DailyTask') # 每日任务单词
     exam_amount = models.IntegerField(default=0) # 测试的单词总量
+    favor_words = models.ManyToManyField(WordSet) # 用户收藏的单词
     # TODO avatar = ProcessedImageField(upload_to=avatar_upload_path, default='avatar/default.jpg', verbose_name='头像', processors=[ResizeToFill(85,85)])
 
     def __str__(self):

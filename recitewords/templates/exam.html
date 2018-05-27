@@ -69,9 +69,6 @@
             success: function (json) {
                 window.word_list = json['word_list'];
                 window.id_list = json['id_list'];
-                console.log(window.word_list); // DEBUG
-                console.log(window.word_list[0]); // DEBUG
-                console.log(window.id_list); // DEBUG
                 window.i = 0;
                 window.correct_amount = 0;
                 if (window.word_list.length == 0) {
@@ -102,7 +99,7 @@
     $(document).on("click", "#unknow-btn", function () {
         var csrftoken = getCookie('csrftoken');
         var id = window.id_list[window.i];
-        console.log(id); // DEBUG
+        
         $.ajax({
             url: window.location.href,
             type: "POST",

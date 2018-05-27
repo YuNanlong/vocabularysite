@@ -4,7 +4,11 @@
         <div class="col-md-6 col-md-offset-3">
             <h1 class="semi-bold text-center" id="word-spelling">{{ word.word.word.spelling }}</h2>
                 <!--<div style="display: flex; display: -webkit-flex; justify-content:center;"><div class="heart"></div></div>-->
-                <div style="display: flex; display: -webkit-flex; justify-content:center; align-items:center;"><span class="glyphicon glyphicon-heart" aria-hidden="true" id="favor" style="color: #f00;font-size: 26px; "></span>   <h5>添加收藏</h5></div>
+                {% if is_favored %}
+                <div style="display: flex; display: -webkit-flex; justify-content:center; align-items:center;" id="favor"><span class="glyphicon glyphicon-heart" aria-hidden="true" id="favor-icon" style="font-size: 25px; color: #f00"></span><h4 style="margin-left: 3px;" id="favor-text">取消收藏</h5></div>
+                {% else %}
+                <div style="display: flex; display: -webkit-flex; justify-content:center; align-items:center;" id="favor"><span class="glyphicon glyphicon-heart" aria-hidden="true" id="favor-icon" style="font-size: 25px; color: #505458"></span><h4 style="margin-left: 3px;" id="favor-text">点击收藏</h5></div>
+                {% endif %}
                 <h4 class="normal text-center" style="visibility: hidden;" id="word-meaning">{{ word.word.word.meaning }}</h3>
                     <div id="btn-list" style="display: flex; display: -webkit-flex; justify-content:center;">
                         <a class="btn btn-info btn-cons m-t-10" id="know-btn">认识</a>
@@ -63,7 +67,7 @@
     $(document).on("click", "#know-btn", function () {
         var csrftoken = getCookie('csrftoken');
         var task_id = $("form#recite-form [name='task-id']").val();
-        console.log(task_id); //DEBUG
+        
         $.ajax({
             url: window.location.href,
             type: "POST",
@@ -77,8 +81,9 @@
                 var word_spelling = $("#word-spelling");
                 var task_id = $("input[name='task-id']");
                 var word_meaning = $("#word-meaning");
+                var favor_icon = $("#favor-icon");
+                var favor_text = $("#favor-text");
 
-                console.log(json); //DEBUG
                 remained_persent = toPercent(json['proportion']);
                 finished_persent = toPercent(1 - json['proportion']);
                 $(".percent").css("left", finished_persent);
@@ -93,6 +98,41 @@
                     word_spelling.text(json['word_spelling']);
                     task_id.val(json['task_id']);
                     word_meaning.text(json['word_meaning']);
+                    if(json['is_favored']){
+                        favor_icon.css("color", "#f00");
+                        favor_text.text("取消收藏");
+                        favor_icon.addClass("favor");
+                    }
+                    else{
+                        favor_icon.css("color", "#505458");
+                        favor_text.text("点击收藏");
+                        favor_icon.addClass("unfavor");
+                    }
+                }
+            }
+        });
+    });
+
+    $("#favor").click(function(){
+        var task_id = $("input[name='task-id']").val();
+        var csrftoken = getCookie('csrftoken');
+        
+        $.ajax({
+            url: "/recite/favor",
+            type: "POST",
+            data: {
+                "csrfmiddlewaretoken": csrftoken,
+                "task-id": task_id,
+            },
+
+            success: function(json){
+                if($("#favor-text").text() == "取消收藏"){
+                    $("#favor-icon").css("color", "#505458");
+                    $("#favor-text").text("点击收藏");
+                }
+                else{
+                    $("#favor-icon").css("color", "#f00");
+                    $("#favor-text").text("取消收藏");
                 }
             }
         });
@@ -100,7 +140,6 @@
 
     $(document).on("click", "#unknow-btn", function () {
         $("#word-meaning").attr("style", "visibility: visiable;");
-        console.log($("#word-meaning").css("visibility")); // DEBUG
         $("#btn-list").empty();
         $("<a class='btn btn-info btn-cons m-t-10' id='next-word'>下一个</a>").appendTo($("#btn-list"))
     });
@@ -108,7 +147,7 @@
     $(document).on("click", "#next-word", function () {
         var csrftoken = getCookie('csrftoken');
         var task_id = $("form#recite-form [name='task-id']").val();
-        console.log(task_id); // DEBUG
+        
         $.ajax({
             url: window.location.href,
             type: "POST",
@@ -122,8 +161,9 @@
                 var word_spelling = $("#word-spelling");
                 var task_id = $("input[name='task-id']");
                 var word_meaning = $("#word-meaning");
+                var favor_icon = $("#favor-icon");
+                var favor_text = $("#favor-text");
 
-                console.log(json); //DEBUG
                 if (json['word_spelling'] == null) {
                     alert('您已经完成今日学习任务!');
                     window.location.href = '/recite/home';
@@ -135,13 +175,23 @@
                     $('<a class="btn btn-info btn-cons m-t-10" id="unknow-btn">不认识</a>').appendTo($("#btn-list"))
                     word_spelling.text(json['word_spelling']);
                     task_id.val(json['task_id']);
-                    console.log(json['word_meaning']); //DEBUG
                     word_meaning.text(json['word_meaning']);
+                    if(json['is_favored']){
+                        favor_icon.css("color", "#f00");
+                        favor_text.text("取消收藏");
+                        favor_icon.addClass("favor");
+                    }
+                    else{
+                        favor_icon.css("color", "#505458");
+                        favor_text.text("点击收藏");
+                        favor_icon.addClass("unfavor");
+                    }
                 }
-
             }
         });
     });
+
+
 
     $(window).ready(function () {
         var nav_height = $(".navbar").height();
