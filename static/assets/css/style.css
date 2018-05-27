@@ -28,6 +28,7 @@
 	border-color: #fff;
 }
 
+/* 表单输入框错误提示 */
 .custom-select.is-invalid, .form-control.is-invalid, .was-validated .custom-select:invalid, .was-validated .form-control:invalid {
     border-color: #dc3545;
 }
@@ -38,6 +39,37 @@
     font-size: .875rem;
     color: #dc3545;
 }
+
+.heart { 
+    position: relative; 
+    width: 12px; 
+    height: 12px; 
+    transform: rotate(45deg); 
+    -ms-transform: rotate(45deg); 
+    -moz-transform: rotate(45deg); 
+    -webkit-transform: rotate(45deg); 
+    -o-transform: rotate(45deg); 
+	background: red; 
+} 
+
+.heart:before, .heart:after { 
+    position: absolute; 
+    display: block; 
+    content: ''; 
+    width: 12px; 
+    height: 12px; 
+    border-radius: 100%; 
+	background: red; 
+} 
+
+.heart:before { 
+    left: -50%; 
+    top: 0; 
+} 
+.heart:after { 
+    right: 0; 
+    top: -50%; 
+} 
 
 
 html{
@@ -1659,7 +1691,7 @@ input[type="tel"],
 input[type="color"] {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   -webkit-appearance: none !important;   
-	color: #282323 
+	color: #282323; 
   outline: 0;
   height: 16px;
   padding: 6px 9px !important;
