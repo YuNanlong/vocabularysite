@@ -46,6 +46,7 @@ def search_word(request):
 
 @login_required
 def recite_word(request):
+    print(request.user.current_wordbook.name)
     if request.method == 'POST':
         print(request.POST) #DEBUG
         if 'add_to_favor' in request.POST:
@@ -90,6 +91,8 @@ def recite_word(request):
         else:   
             return redirect('home')
     else:
+        if request.user.daily_task_amount == 0:
+            return HttpResponse("<script>alert('请先设置每日学习单词量'); window.location.href='/recite/home';</script>")
         DailyTask.init_daily_task(request.user)
         try:
             word = DailyTask.objects.get(user=request.user, task_id=1)
@@ -110,7 +113,7 @@ def recite_word(request):
                     is_favored = False
                 return render(request, 'recite_word.html', {'word': word, 'finished_proportion': finished_proportion, 'remained_proportion': remained_proportion, 'is_favored': is_favored})
         except:
-            return HttpResponse("<script>alert('尚未选择单词书!'); window.location.href='/accounts/setting';</script>")
+            return HttpResponse("<script>alert('尚未选择单词书!'); window.location.href='/recite/home';</script>")
 
 @login_required
 def exam(request):
@@ -126,6 +129,8 @@ def exam(request):
             candidate_word_set = list(LearnedWord.objects.filter(user=request.user))
             word_list = []
             id_list = []
+            if request.user.exam_amount == 0:
+                return JsonResponse({'exam_amount': 0})
             if len(candidate_word_set) <= request.user.exam_amount:
                 for i in candidate_word_set:
                     word_list.append(i.word.word.spelling)
@@ -135,7 +140,7 @@ def exam(request):
                 for i in exam_word_set:
                     word_list.append(i.word.word.spelling)
                     id_list.append(i.id)
-            json_data = {'word_list': word_list, 'id_list': id_list}
+            json_data = {'exam_amount': request.user.exam_amount, 'word_list': word_list, 'id_list': id_list}
             return JsonResponse(json_data)
         else:
             return render(request, 'exam.html')

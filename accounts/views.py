@@ -114,12 +114,17 @@ def my_set(request):
             exam_amount = request.POST['exam-amount']
             if len(daily_task_amount) == 0:
                 json_data = {'status': 'fail', 'field': 'dailytaskamount', 'error_message': '每日单词量设置不能为空'}
+            if int(daily_task_amount) == 0:
+                json_data = {'status': 'fail', 'field': 'dailytaskamount', 'error_message': '每日单词量设置不能为0'}
             elif int(daily_task_amount) > 300:
                 json_data = {'status': 'fail', 'field': 'dailytaskamount', 'error_message': '每日单词量不能超过300'}
             elif len(exam_amount) == 0:
                 json_data = {'status': 'fail', 'field': 'examamount', 'error_message': '每次测试单词量设置不能为空'}
             else:
                 json_data = {'status': 'success'}
+                request.user.daily_task_amount = daily_task_amount
+                request.user.exam_amount = exam_amount
+                request.user.save()
         return JsonResponse(json_data)
     else:                
         return redirect('home')

@@ -2,15 +2,20 @@ from django.db import models
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 import datetime
+import time
+
+def bookfront_upload_path(instance, filename):
+    return '/'.join(['bookfront', time.strftime('%y%m%d%H%M%S')]) + '.jpg'
 
 # 单词
 class Word(models.Model):
     spelling = models.CharField(max_length=255, unique=True, blank=False)
     meaning = models.TextField() # 单词详细释义
-    simple_meaning = models.TextField() # 单词简单释义，用于考核
-    wrong_meaning_1 = models.TextField() # 单词错误释义，用于考核
-    wrong_meaning_2 = models.TextField()
-    wrong_meaning_3 = models.TextField()
+    past_tense = models.CharField(max_length=64)
+    past_priciple = models.CharField(max_length=64)
+    present_progressive = models.CharField(max_length=64)
+    plurality = models.CharField(max_length=64)
+    example = models.TextField()
 
     def __str__(self):
         return self.spelling
@@ -19,7 +24,7 @@ class Word(models.Model):
 class WordBook(models.Model):
     name = models.CharField(max_length=128, unique=True, blank=False) # 单词书名称
     description = models.TextField() # 单词书简介
-    # TODO front_image = ProcessedImageField(upload_to=bookfront_upload_path, default='bookfront/default.jpg', verbose_name='单词书封面', processors=[ResizeToFill(85,85)]) # 单词书封面
+    front_image = models.ImageField(upload_to=bookfront_upload_path, default='bookfront/default.jpg') # 单词书封面
     words = models.ManyToManyField(Word, through='WordSet') # 单词书的单词集
 
     def __str__(self):
@@ -92,6 +97,7 @@ class DailyTask(models.Model):
                         task_id += 1
                     else:
                         i.delete() # TODO 测试每日单词量减少至少于之前未完成的总量的情况
+            print(user.daily_task_amount)
             for i in user.need_to_learn():
                 if task_id <= user.daily_task_amount:
                     try:

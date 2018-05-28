@@ -71,6 +71,10 @@
                 window.id_list = json['id_list'];
                 window.i = 0;
                 window.correct_amount = 0;
+                if(json['exam_amount'] == 0){
+                    alert("请先设置每次测试的单词量");
+                    $('#modal-container-learn-set').modal();
+                }
                 if (window.word_list.length == 0) {
                     alert("您还未学习任何单词!无法进行测试");
                     window.location.href = '/recite/home';
@@ -87,7 +91,7 @@
         finished_persent = toPercent(i / window.word_list.length);
         $(".percent").css("left", finished_persent);
         $(".percent").text(finished_persent);
-        $(".progress-bar").css("width: ", finished_persent);
+        $(".progress-bar").css("width", finished_persent);
         $(".overlay").css("width", remained_persent);
         if (i == window.word_list.length) {
             alert("您已完成考试！\n本次考试的正确率为" + window.correct_amount + "/" + window.word_list.length);

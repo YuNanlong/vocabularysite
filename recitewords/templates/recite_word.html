@@ -9,7 +9,9 @@
                 {% else %}
                 <div style="display: flex; display: -webkit-flex; justify-content:center; align-items:center;" id="favor"><span class="glyphicon glyphicon-heart" aria-hidden="true" id="favor-icon" style="font-size: 25px; color: #505458"></span><h4 style="margin-left: 3px;" id="favor-text">点击收藏</h5></div>
                 {% endif %}
-                <h4 class="normal text-center" style="visibility: hidden;" id="word-meaning">{{ word.word.word.meaning }}</h3>
+                <h4 class="normal text-center" style="visibility: hidden;" id="word-meaning">
+                    {{ word.word.word.meaning }}
+                </h4>
                     <div id="btn-list" style="display: flex; display: -webkit-flex; justify-content:center;">
                         <a class="btn btn-info btn-cons m-t-10" id="know-btn">认识</a>
                         <a class="btn btn-info btn-cons m-t-10" id="unknow-btn">不认识</a>

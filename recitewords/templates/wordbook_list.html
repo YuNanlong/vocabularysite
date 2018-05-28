@@ -32,7 +32,8 @@
                     {% for wordbook in wordbook_list %}
                     <li class="item web">
                         <div class="portfolio-image-wrapper">
-                            <img src="/static/assets/img/gallery/1.jpg" alt="" />
+                            {% load staticfiles %}
+                            <img src="/media/{{ wordbook.front_image }}" alt="" />
                             <div class="item-info-overlay">
                                 <div>
                                     <h3 class="text-white semi-bold p-t-60 project-title ">
@@ -46,10 +47,17 @@
                             <h4 class="text-dark no-margin p-t-10 title semi-bold">
                                 {{ wordbook.name }}</h4>
                             <p></p>
+
                         </div>
+
                         <!--END ITEM-INFO-->
                         <div class="clearfix">
                         </div>
+                        <form method="POST" action="{% url 'wordbook_detail' %}">
+                            {% csrf_token %}
+                            <input type="text" hidden="hidden" name="wordbook-id" value="{{ wordbook.id }}">
+                            <input type="submit" class="btn btn-primary btn-cons" value="选择该书">
+                        </form>
                     </li>
                     {% endfor %}
                 </ul>

@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import django.core.validators
 import django.utils.timezone
 import django.contrib.auth.models
+import django.core.validators
 
 
 class Migration(migrations.Migration):
@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(verbose_name='active', default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.')),
                 ('date_joined', models.DateTimeField(verbose_name='date joined', default=django.utils.timezone.now)),
                 ('daily_task_amount', models.IntegerField(default=0)),
+                ('exam_amount', models.IntegerField(default=0)),
             ],
             options={
                 'verbose_name': 'user',
