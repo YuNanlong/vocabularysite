@@ -44,12 +44,6 @@ class LearnedWord(models.Model):
     word = models.ForeignKey(WordSet) # 单词
     mastery_degree = models.IntegerField(default=0, blank=False) # 掌握程度
 
-# 学习进度记录
-class DailyProgress(models.Model):
-    user = models.ForeignKey('accounts.User') # 用户
-    word = models.ForeignKey(WordSet) # 单词
-    learn_date = models.DateField() # 学习时间
-
 # 每日学习任务
 class DailyTask(models.Model):
     user = models.ForeignKey('accounts.User') # 用户
@@ -97,7 +91,6 @@ class DailyTask(models.Model):
                         task_id += 1
                     else:
                         i.delete() # TODO 测试每日单词量减少至少于之前未完成的总量的情况
-            print(user.daily_task_amount)
             for i in user.need_to_learn():
                 if task_id <= user.daily_task_amount:
                     try:

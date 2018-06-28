@@ -20,7 +20,11 @@
                     <div id="collapse{{ favor_word.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ favor_word.id }}">
                         <div class="panel-body">
                             {{ favor_word.word.meaning }}
+                            <div id="btn-list" style="display: flex; display: -webkit-flex; justify-content:center;">
+                                <a class="btn btn-info btn-cons m-t-10" href="{% url 'favor_word' %}?id={{ favor_word.id }}">取消收藏</a>
+                            </div>
                         </div>
+                        
                     </div>
                 </div>
                 {% endfor %}

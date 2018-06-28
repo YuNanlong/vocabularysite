@@ -19,20 +19,25 @@ def my_validate_email(email):
 username_pattern = re.compile(r'^[\w\.\+\-@]+$')
 
 def signup(request):
-    print(request.POST)
     if request.method == 'POST':
         username = request.POST['username']
         raw_password_1 = request.POST['password1']
         raw_password_2 = request.POST['password2']
         email = request.POST['email']
-        if re.match(username_pattern, username) is None:
+        if len(username) == 0:
+            json_data = {'status': 'fail', 'field': 'username', 'error_message': '用户名不能为空'}
+        elif re.match(username_pattern, username) is None:
             json_data = {'status': 'fail', 'field': 'username', 'error_message': '用户名格式错误'}
         elif len(username) < 6:
             json_data = {'status': 'fail', 'field': 'username', 'error_message': '用户名少于6位'}
         elif User.objects.filter(username=username).count() > 0:
             json_data = {'status': 'fail', 'field': 'username', 'error_message': '用户名已经被占用'}
+        elif len(raw_password_1) == 0:
+            json_data = {'status': 'fail', 'field': 'password1', 'error_message': '密码不能为空'}
         elif len(raw_password_1) < 6:
             json_data = {'status': 'fail', 'field': 'password1', 'error_message': '密码少于6位'}
+        elif len(raw_password_2) == 0:
+            json_data = {'status': 'fail', 'field': 'password2', 'error_message': '密码不能为空'}
         elif len(raw_password_2) < 6:
             json_data = {'status': 'fail', 'field': 'password2', 'error_message': '密码少于6位'}
         elif raw_password_1 != raw_password_2:
@@ -52,7 +57,6 @@ def signup(request):
 
 def my_login(request):
     if request.method == 'POST':
-        print(request.POST)
         username = request.POST['username']
         raw_password = request.POST['password']
         user = authenticate(username=username, password=raw_password)
@@ -79,7 +83,9 @@ def my_set(request):
             raw_password_2 = request.POST['password2']
             email = request.POST['email']
             if username != request.user.username:
-                if len(username) < 6:
+                if len(username) == 0:
+                    json_data = {'status': 'fail', 'field': 'username', 'error_message': '用户名不能为空'}
+                elif len(username) < 6:
                     json_data = {'status': 'fail', 'field': 'username', 'error_message': '用户名少于6位'}
                 elif User.objects.filter(username=username).count() > 0:
                     json_data = {'status': 'fail', 'field': 'username', 'error_message': '用户名已经被占用'}
@@ -97,7 +103,9 @@ def my_set(request):
                 if json_data != {}:
                     return JsonResponse(json_data)
             if email != request.user.email:
-                if my_validate_email(email) == False:
+                if len(email) == 0:
+                    json_data = {'status': 'fail', 'field': 'email', 'error_message': '邮箱不能为空'}
+                elif my_validate_email(email) == False:
                     json_data = {'status': 'fail', 'field': 'email', 'error_message': '邮箱格式错误'}
                 elif User.objects.filter(email=email).count() > 0:
                     json_data = {'status': 'fail', 'field': 'email', 'error_message': '邮箱已经被注册'}
@@ -108,18 +116,22 @@ def my_set(request):
             request.user.save()
             json_data = {'status': 'success'}
         elif 'learn-set' in request.POST:
-            print(request.POST)
-            # TODO 测试daily-task-amount为空的情况
             daily_task_amount = request.POST['daily-task-amount']
             exam_amount = request.POST['exam-amount']
             if len(daily_task_amount) == 0:
                 json_data = {'status': 'fail', 'field': 'dailytaskamount', 'error_message': '每日单词量设置不能为空'}
-            if int(daily_task_amount) == 0:
+            elif int(daily_task_amount) < 0:
+                json_data = {'status': 'fail', 'field': 'dailytaskamount', 'error_message': '每日单词量不能小于0'}
+            elif int(daily_task_amount) == 0:
                 json_data = {'status': 'fail', 'field': 'dailytaskamount', 'error_message': '每日单词量设置不能为0'}
             elif int(daily_task_amount) > 300:
                 json_data = {'status': 'fail', 'field': 'dailytaskamount', 'error_message': '每日单词量不能超过300'}
             elif len(exam_amount) == 0:
                 json_data = {'status': 'fail', 'field': 'examamount', 'error_message': '每次测试单词量设置不能为空'}
+            elif int(exam_amount) < 0:
+                json_data = {'status': 'fail', 'field': 'examamount', 'error_message': '每次测试单词量不能小于0'}
+            elif int(exam_amount) > 100:
+                json_data = {'status': 'fail', 'field': 'examamount', 'error_message': '每次测试单词量不能超过100'}
             else:
                 json_data = {'status': 'success'}
                 request.user.daily_task_amount = daily_task_amount

@@ -38,7 +38,6 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h4 class="modal-title" id="myModalLabel">
                         退出
                     </h4>
@@ -75,11 +74,6 @@
                                 <div id="loginform-password-feedback" class="invalid-feedback d-block">
                                     &nbsp;
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row form-row">
-                            <div class="col-md-10 col-md-offset-1">
-                                <a>找回密码</a>
                             </div>
                         </div>
                     </form>
@@ -170,7 +164,7 @@
                         <div class="row form-row">
                             <div class="col-md-10 col-md-offset-1">
                                 <p>每日学习单词个数</p>
-                                <input name="daily_task_amount" id="learnsetform-dailytaskamount-input" type="text" class="form-control " placeholder="用户名"
+                                <input name="daily_task_amount" id="learnsetform-dailytaskamount-input" type="text" class="form-control" 
                                     value="{{ request.user.daily_task_amount }}">
                                 <small class="form-text text-muted mb-1">不超过300词</small>
                                 <div id="learnsetform-dailytaskamount-feedback" class="invalid-feedback d-block">
@@ -182,6 +176,7 @@
                             <div class="col-md-10 col-md-offset-1">
                                 <p>每次考试单词个数</p>
                                 <input name="exam_amount" id="learnsetform-examamount-input" type="text" class="form-control" value="{{ request.user.exam_amount }}">
+                                <small class="form-text text-muted mb-1">不超过100词</small>
                                 <div id="learnsetform-examamount-feedback" class="invalid-feedback d-block">
                                     &nbsp;
                                 </div>
@@ -274,8 +269,8 @@
                                 <span class="icon-bar"></span>
                             </button>
                             <a href="#" class="navbar-brand compressed">
-                                <img src="/static/assets/img/logo_condensed.png" alt="" data-src="/static/assets/img/logo_condensed.png" data-src-retina="/static/assets/img/logo2x.png"
-                                    width="119" height="22" />
+                                <!--<img src="/static/assets/img/logo_condensed.png" alt="" data-src="/static/assets/img/logo_condensed.png" data-src-retina="/static/assets/img/logo2x.png"
+                                    width="119" height="22" />-->
                             </a>
                         </div>
                         <div class="navbar-collapse collapse">
@@ -342,8 +337,8 @@
                                 <span class="icon-bar"></span>
                             </button>
                             <a href="#" class="navbar-brand">
-                                <img src="/static/assets/img/logo.png" data-src="/static/assets/img/logo.png" data-src-retina="/static/assets/img/logo_2x.png"
-                                    width="119" height="22" alt="" />
+                                <!--<img src="/static/assets/img/logo.png" data-src="/static/assets/img/logo.png" data-src-retina="/static/assets/img/logo_2x.png"
+                                    width="119" height="22" alt="" />-->
                             </a>
                         </div>
                         <div class="navbar-collapse collapse">
@@ -465,59 +460,9 @@
         <div class="section black footer">
             <div class="container">
                 <div class="p-t-30 p-b-50">
-                    <div class="row">
-                        <div class="col-md-2 col-lg-2 col-sm-2 col-xs-12 xs-m-b-20">
-                            <img src="/static/assets/img/logo_condensed.png" alt="" data-src="/static/assets/img/logo_condensed.png" data-src-retina="/static/assets/img/logo2x.png"
-                                width="119" height="22" />
-                            <br />
-                            <br /> © Frittt Templates.
-                            <br /> All Rights Reserved.More Templates
-                            <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from
-                            <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>
-                        </div>
-                        <div class="col-md-4 col-lg-3 col-sm-4  col-xs-12 xs-m-b-20">
-                            <address class="xs-no-padding  col-md-6 col-lg-6 col-sm-6  col-xs-12">
-                                32 - Grey Suite
-                                <br> Odd Street,
-                                <br> NY, USA.
-                            </address>
-                            <div class="xs-no-padding col-md-6 col-lg-6 col-sm-6">
-                                <div>
-                                    (1) 555 666 9999</div>
-                                <a href="javascript:">letstalk@thempleite.com</a>
-                            </div>
-                            <div class="clearfix">
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-lg-2 col-sm-2  col-xs-12 xs-m-b-20">
-                            <div class="bold">
-                                We Are Hiring</div>
-                            Send you resume at
-                            <a href="javascript:">careers@thempleite.com</a>
-                        </div>
-                        <div class="col-md-2 col-lg-2 col-sm-2  col-xs-12 ">
-                            <div class="bold">
-                                FOLLOW US</div>
-                            <br />
-                            <a href="javascript:">
-                                <i class="fa fa-facebook fa-2x"></i>
-                            </a>&nbsp;
-                            <a href="javascript:">
-                                <i class="fa fa-twitter fa-2x"></i>
-                            </a>&nbsp;
-                            <a href="javascript:">
-                                <i class="fa fa-youtube-play  fa-2x">
-                                </i>
-                            </a>&nbsp;
-                            <a href="javascript:">
-                                <i class="fa fa-github fa-2x"></i>
-                            </a>&nbsp;
-                            <a href="javascript:">
-                                <i class="fa fa-dribbble fa-2x"></i>
-                            </a>&nbsp;
-                            <a href="javascript:">
-                                <i class="fa fa-pinterest fa-2x"></i>
-                            </a>
+                    <div class="row" style="color: aliceblue; text-align: center;">
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-12 xs-m-b-20 col-md-offset-4 col-lg-offset-4 col-sm-offset-4">
+                            我爱背单词 © All Rights Reserved
                         </div>
                     </div>
                 </div>

@@ -13,16 +13,18 @@ def home(request):
         wordbook_list = WordBook.objects.all()
     return render(request, 'home.html', {'wordbook_list': wordbook_list})
 
-@login_required
 def show_wordbook_list(request):
+    if request.user.is_authenticated() == False:
+        return HttpResponse("<script>alert('请先登录'); window.location.href='/recite/home';</script>")
     wordbook_list = WordBook.objects.all()
+    for wb in wordbook_list:
+        wb.total_mastered = LearnedWord.objects.filter(word__wordbook=wb, user=request.user, mastery_degree=3).count()
+        wb.total_learned = LearnedWord.objects.filter(word__wordbook=wb, user=request.user).count()
+        wb.learned_percent = round(wb.total_learned / wb.words.count() * 100, 2)
     return render(request, 'wordbook_list.html', {'wordbook_list': wordbook_list})
 
 @login_required
 def show_wordbook_detail(request):
-    print(request.POST) # DEBUG
-    print(request.GET) # DEBUG
-    print(1) # DEBUG
     if request.method == 'POST':
         wordbook = get_object_or_404(WordBook, pk=request.POST['wordbook-id'])
         request.user.set_wordbook(wordbook)
@@ -31,24 +33,10 @@ def show_wordbook_detail(request):
         wordbook = get_object_or_404(WordBook, pk=request.GET['wordbook-id'])
         return render(request, 'wordbook_detail.html', {'wordbook': wordbook})
 
-def search_word(request):
-    print(request.POST) # DEBUG
-    print(request.GET) # DEBUG
-    if request.method == 'POST':
-        try:
-            result = Word.objects.get(spelling=request.POST['searching-word'])
-        except:
-            result = None
-        print(result)
-        return render(request, 'search_word.html', {'is_search': True, 'result': result})
-    else:
-        return render(request, 'search_word.html', {'is_search': False})
-
-@login_required
 def recite_word(request):
-    print(request.user.current_wordbook.name)
+    if request.user.is_authenticated() == False:
+        return HttpResponse("<script>alert('请先登录'); window.location.href='/recite/home';</script>")
     if request.method == 'POST':
-        print(request.POST) #DEBUG
         if 'add_to_favor' in request.POST:
             return redirect('home')
         elif 'next-word' in request.POST:
@@ -64,7 +52,6 @@ def recite_word(request):
                 except:
                     is_favored = False
                 json_data = {'word_spelling': next_word.word.word.spelling, 'task_id': next_word.task_id, 'word_meaning': next_word.word.word.meaning, 'is_favored': is_favored}
-            print(json_data) # DEBUG
             return JsonResponse(json_data)
         elif 'know' in request.POST:
             task_id = request.POST['task-id']
@@ -98,7 +85,6 @@ def recite_word(request):
             word = DailyTask.objects.get(user=request.user, task_id=1)
             if word.is_finished == True:
                 word = word.get_next_word()
-            print(word) # DEBUG
             if word is None:
                 return HttpResponse("<script>alert('您已经完成今日学习任务!'); window.location.href='/recite/home';</script>")
             else:
@@ -115,10 +101,10 @@ def recite_word(request):
         except:
             return HttpResponse("<script>alert('尚未选择单词书!'); window.location.href='/recite/home';</script>")
 
-@login_required
 def exam(request):
+    if request.user.is_authenticated() == False:
+        return HttpResponse("<script>alert('请先登录'); window.location.href='/recite/home';</script>")
     if request.method == 'POST':
-        print(request.POST) # DEBUG
         learned_word = get_object_or_404(LearnedWord, pk=request.POST['id'])
         if learned_word.mastery_degree > 0:
             learned_word.mastery_degree -= 1
@@ -126,29 +112,45 @@ def exam(request):
         return HttpResponse("")
     else:
         if 'get_exam_words' in request.GET:
+            all_word_set = list(request.user.current_wordbook.wordset_set.all())
             candidate_word_set = list(LearnedWord.objects.filter(user=request.user))
+            random.shuffle(candidate_word_set)
             word_list = []
+            meaning_list = []
             id_list = []
+            error_word_list = []
             if request.user.exam_amount == 0:
                 return JsonResponse({'exam_amount': 0})
             if len(candidate_word_set) <= request.user.exam_amount:
                 for i in candidate_word_set:
                     word_list.append(i.word.word.spelling)
+                    meaning_list.append(i.word.word.meaning)
                     id_list.append(i.id)
             else:
                 exam_word_set = random.sample(candidate_word_set, request.user.exam_amount)
                 for i in exam_word_set:
                     word_list.append(i.word.word.spelling)
+                    meaning_list.append(i.word.word.meaning)
                     id_list.append(i.id)
-            json_data = {'exam_amount': request.user.exam_amount, 'word_list': word_list, 'id_list': id_list}
+            iter_times = 30
+            if request.user.exam_amount > 30:
+                iter_times = request.user.exam_amount
+            for i in range(iter_times):
+                while True:
+                    error_word = random.sample(all_word_set, 1)[0]
+                    if error_word.word.id in id_list:
+                        continue
+                    error_word_list.append(error_word.word.meaning)
+                    break
+            json_data = {'exam_amount': request.user.exam_amount, 'word_list': word_list, 'id_list': id_list, 'meaning_list': meaning_list, 'error_word_list': error_word_list}
             return JsonResponse(json_data)
         else:
             return render(request, 'exam.html')
 
-@login_required
 def favor_word(request):
+    if request.user.is_authenticated() == False:
+        return HttpResponse("<script>alert('请先登录'); window.location.href='/recite/home';</script>")
     if request.method == 'POST':
-        print(request.POST)
         word = get_object_or_404(DailyTask, user=request.user, task_id=int(request.POST['task-id'])).word
         try:
             request.user.favor_words.get(pk=word.id)
@@ -157,5 +159,14 @@ def favor_word(request):
             request.user.favor_words.add(word)
         return JsonResponse({})
     else:
+        if 'id' in request.GET.keys():
+            id = int(request.GET['id'])
+            word = get_object_or_404(WordSet, pk=id)
+            request.user.favor_words.remove(word)
+            return redirect('favor_word')
         favor_word_list = request.user.favor_words.all()
         return render(request, 'favor_word.html', {'favor_word_list': favor_word_list})
+
+def exam_result(request):
+    result = round(float(request.GET['result']) * 100)
+    return render(request, 'exam_result.html', {'result': result})

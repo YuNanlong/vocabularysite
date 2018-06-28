@@ -4,10 +4,18 @@
         <div class="col-md-6 col-md-offset-3">
             <h1 class="semi-bold text-center" id="word-spelling">{{ word.word.word.spelling }}</h2>
                 <h4 class="normal text-center" style="visibility: hidden;" id="word-meaning">{{ word.word.word.meaning }}</h3>
-
-                    <div id="btn-list" style="display: flex; display: -webkit-flex; justify-content:center;">
-                        <a class="btn btn-info btn-cons m-t-10" id="know-btn">掌握了</a>
-                        <a class="btn btn-info btn-cons m-t-10" id="unknow-btn">忘记了</a>
+                    <br>
+                    <div id="btn-list" style="display: flex; display: -webkit-flex; justify-content:center;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">
+                        <a class="btn btn-info btn-cons-exam m-t-1" id="a-btn"></a>
+                    </div>
+                    <div id="btn-list" style="display: flex; display: -webkit-flex; justify-content:center;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">
+                        <a class="btn btn-info btn-cons-exam m-t-1" id="b-btn"></a>
+                    </div>
+                    <div id="btn-list" style="display: flex; display: -webkit-flex; justify-content:center;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">
+                        <a class="btn btn-info btn-cons-exam m-t-1" id="c-btn"></a>
+                    </div>
+                    <div id="btn-list" style="display: flex; display: -webkit-flex; justify-content:center;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">
+                        <a class="btn btn-info btn-cons-exam m-t-1" id="d-btn"></a>
                     </div>
                     <form method="POST" id="recite-form">{% csrf_token %}
                         <input type="text" hidden="hidden" name="task-id" value="{{ word.task_id }}">
@@ -58,6 +66,42 @@
         return str;
     }
 
+    function rnd(n, m) {
+        var random = Math.floor(Math.random() * (m - n + 1) + n);
+        return random;
+    }
+
+    function set_choice() {
+        window.right = rnd(1, 4)
+        window.e1 = rnd(0, Math.round(window.error_word_list.length / 3) - 1)
+        window.e2 = rnd(Math.round(window.error_word_list.length / 3), Math.round(2 * window.error_word_list.length / 3) - 1)
+        window.e3 = rnd(Math.round(2 * window.error_word_list.length / 3) - 1, window.error_word_list.length - 1)
+        if (window.right == 1) {
+            $("#a-btn").text(meaning_list[window.i]);
+            $("#b-btn").text(error_word_list[window.e1]);
+            $("#c-btn").text(error_word_list[window.e2]);
+            $("#d-btn").text(error_word_list[window.e3]);
+        }
+        else if (window.right == 2) {
+            $("#b-btn").text(meaning_list[window.i]);
+            $("#a-btn").text(error_word_list[window.e1]);
+            $("#c-btn").text(error_word_list[window.e2]);
+            $("#d-btn").text(error_word_list[window.e3]);
+        }
+        else if (window.right == 3) {
+            $("#c-btn").text(meaning_list[window.i]);
+            $("#b-btn").text(error_word_list[window.e1]);
+            $("#a-btn").text(error_word_list[window.e2]);
+            $("#d-btn").text(error_word_list[window.e3]);
+        }
+        else {
+            $("#d-btn").text(meaning_list[window.i]);
+            $("#b-btn").text(error_word_list[window.e1]);
+            $("#c-btn").text(error_word_list[window.e2]);
+            $("#a-btn").text(error_word_list[window.e3]);
+        }
+    }
+
     $(document).ready(function () {
         $.ajax({
             url: window.location.href,
@@ -69,9 +113,11 @@
             success: function (json) {
                 window.word_list = json['word_list'];
                 window.id_list = json['id_list'];
+                window.meaning_list = json['meaning_list']
+                window.error_word_list = json['error_word_list']
                 window.i = 0;
                 window.correct_amount = 0;
-                if(json['exam_amount'] == 0){
+                if (json['exam_amount'] == 0) {
                     alert("请先设置每次测试的单词量");
                     $('#modal-container-learn-set').modal();
                 }
@@ -80,13 +126,29 @@
                     window.location.href = '/recite/home';
                 }
                 $("#word-spelling").text(word_list[window.i]);
+                set_choice();
             }
         });
     });
 
-    $(document).on("click", "#know-btn", function () {
+    $(document).on("click", "#a-btn", function () {
         window.i += 1;
-        window.correct_amount += 1;
+        if (window.right == 1) {
+            window.correct_amount += 1;
+        }
+        else {
+            var csrftoken = getCookie('csrftoken');
+            var id = window.id_list[window.i];
+
+            $.ajax({
+                url: window.location.href,
+                type: "POST",
+                data: {
+                    "csrfmiddlewaretoken": csrftoken,
+                    "id": id,
+                },
+            });
+        }
         remained_persent = toPercent(1 - i / window.word_list.length);
         finished_persent = toPercent(i / window.word_list.length);
         $(".percent").css("left", finished_persent);
@@ -94,36 +156,103 @@
         $(".progress-bar").css("width", finished_persent);
         $(".overlay").css("width", remained_persent);
         if (i == window.word_list.length) {
-            alert("您已完成考试！\n本次考试的正确率为" + window.correct_amount + "/" + window.word_list.length);
-            window.location.href = '/recite/home';
+            window.location.href = '/recite/exam_result?result=' + String(window.correct_amount / window.word_list.length);
         }
         $("#word-spelling").text(window.word_list[i]);
+        set_choice();
     });
 
-    $(document).on("click", "#unknow-btn", function () {
-        var csrftoken = getCookie('csrftoken');
-        var id = window.id_list[window.i];
-        
-        $.ajax({
-            url: window.location.href,
-            type: "POST",
-            data: {
-                "csrfmiddlewaretoken": csrftoken,
-                "id": id,
-            },
-        });
+    $(document).on("click", "#b-btn", function () {
         window.i += 1;
+        if (window.right == 2) {
+            window.correct_amount += 1;
+        }
+        else {
+            var csrftoken = getCookie('csrftoken');
+            var id = window.id_list[window.i];
+
+            $.ajax({
+                url: window.location.href,
+                type: "POST",
+                data: {
+                    "csrfmiddlewaretoken": csrftoken,
+                    "id": id,
+                },
+            });
+        }
         remained_persent = toPercent(1 - i / window.word_list.length);
         finished_persent = toPercent(i / window.word_list.length);
         $(".percent").css("left", finished_persent);
         $(".percent").text(finished_persent);
         $(".progress-bar").css("width", finished_persent);
         $(".overlay").css("width", remained_persent);
-        if (window.i == word_list.length) {
-            alert("您已完成考试！\n本次考试的正确率为" + window.correct_amount + "/" + window.word_list.length);
-            window.location.href = '/recite/home';
+        if (i == window.word_list.length) {
+            window.location.href = '/recite/exam_result?result=' + String(window.correct_amount / window.word_list.length);
         }
-        $("#word-spelling").text(word_list[i]);
+        $("#word-spelling").text(window.word_list[i]);
+        set_choice();
+    });
+
+    $(document).on("click", "#c-btn", function () {
+        window.i += 1;
+        if (window.right == 3) {
+            window.correct_amount += 1;
+        }
+        else {
+            var csrftoken = getCookie('csrftoken');
+            var id = window.id_list[window.i];
+
+            $.ajax({
+                url: window.location.href,
+                type: "POST",
+                data: {
+                    "csrfmiddlewaretoken": csrftoken,
+                    "id": id,
+                },
+            });
+        }
+        remained_persent = toPercent(1 - i / window.word_list.length);
+        finished_persent = toPercent(i / window.word_list.length);
+        $(".percent").css("left", finished_persent);
+        $(".percent").text(finished_persent);
+        $(".progress-bar").css("width", finished_persent);
+        $(".overlay").css("width", remained_persent);
+        if (i == window.word_list.length) {
+            window.location.href = '/recite/exam_result?result=' + String(window.correct_amount / window.word_list.length);
+        }
+        $("#word-spelling").text(window.word_list[i]);
+        set_choice();
+    });
+
+    $(document).on("click", "#d-btn", function () {
+        window.i += 1;
+        if (window.right == 4) {
+            window.correct_amount += 1;
+        }
+        else {
+            var csrftoken = getCookie('csrftoken');
+            var id = window.id_list[window.i];
+
+            $.ajax({
+                url: window.location.href,
+                type: "POST",
+                data: {
+                    "csrfmiddlewaretoken": csrftoken,
+                    "id": id,
+                },
+            });
+        }
+        remained_persent = toPercent(1 - i / window.word_list.length);
+        finished_persent = toPercent(i / window.word_list.length);
+        $(".percent").css("left", finished_persent);
+        $(".percent").text(finished_persent);
+        $(".progress-bar").css("width", finished_persent);
+        $(".overlay").css("width", remained_persent);
+        if (i == window.word_list.length) {
+            window.location.href = '/recite/exam_result?result=' + String(window.correct_amount / window.word_list.length);
+        }
+        $("#word-spelling").text(window.word_list[i]);
+        set_choice();
     });
 
     $(window).ready(function () {
